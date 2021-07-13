@@ -61,9 +61,7 @@ def perform_filter(animelist):
     result = []
     for anime in animelist:
         anime = anime["node"]
-        details = get_anime_details(anime["id"])
-        if details["status"] == "currently_airing":
-            anime["broadcast"] = details.get("broadcast", None)
+        if anime["status"] == "currently_airing":
             result.append(anime)
     return result
 
@@ -84,7 +82,7 @@ def get_user():
 def get_user_animelist(status=None):
     data = []
     while len(data) % 1000 == 0:
-        params = {"limit": 1000, "offset": len(data)}
+        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status"}
         if status:
             params["status"] = status
         resp = mal.get("users/@me/animelist", params=params, token=session["token"])
