@@ -1,5 +1,6 @@
 from flask import Flask, url_for, session, redirect, jsonify, abort, render_template
 from config import config
+import time
 
 from authlib.integrations.flask_client import OAuth
 from authlib.oauth2.rfc7636 import create_s256_code_challenge
@@ -14,6 +15,7 @@ oauth = OAuth()
 oauth.init_app(app)
 
 code_verifier = generate_token(48)
+app_start_stamp = time.time()
 
 mal = oauth.register("mal", 
     client_id = config["client-id"],
@@ -45,7 +47,7 @@ def logout():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", app_start_stamp=app_start_stamp)
 
 @app.route("/api")
 def api():
