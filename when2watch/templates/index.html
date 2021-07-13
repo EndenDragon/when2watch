@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css" integrity="sha512-usVBAd66/NpVNfBge19gws2j6JZinnca12rAe2l+d+QkLU9fiG02O1X8Q6hepIpr/EYKZvKx/I9WsnujJuOmBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <title>When2Watch</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">When2Watch</span>
+            <a id="today-btn" role="button" class="btn btn-primary me-auto invisible" href="#today">Today</a>
+            <div class="d-flex invisible" id="user-corner">
+                <img src="https://api-cdn.myanimelist.net/images/userimages/8840470.jpg?t=1626136200" class="img-thumbnail" id="profile-picture" alt="Profile pciture">
+                <a class="btn btn-outline-danger m-1" href="{{ url_for('logout') }}" role="button" id="logout-btn">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-fluid py-4">
+        <div class="p-5 mb-4 bg-light rounded-3" id="loading">
+            <div class="container-fluid py-5">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p>Fetching your list, please wait!</p>
+            </div>
+        </div>
+
+        <div class="p-5 mb-4 bg-light rounded-3 d-none" id="welcome">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">When2Watch this season anime?</h1>
+                <p class="col-md-8 fs-4">Sign in with MyAnimeList to view when to watch your anime.</p>
+                <a class="btn btn-lg btn-primary m-1" href="{{ url_for('login') }}" role="button" id="login-btn">Login with MyAnimeList</a>
+            </div>
+        </div>
+
+        <div id="weekdays" class="d-none">
+            <div class="card m-3" id="weekday-card-7">
+                <div class="card-body">
+                    <h5 class="card-title">Sunday</h5>
+                    <div class="row anime-grid">
+
+                        <!--
+                        <div class="card col-xs-12 col-sm-6 col-md-3 col-lg-2">
+                            <img src="https://api-cdn.myanimelist.net/images/anime/1911/113611l.jpg" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="" target="_blank">My Hero Academia</a></h5>
+                                <p class="card-text">
+                                    3:00 PM <br>
+                                    <span class="badge bg-success">Watching</span>
+                                    <span class="badge bg-info">Plan to Watch</span>
+                                </p>
+                            </div>
+                        </div>
+                        -->
+
+                    </div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-1">
+                <div class="card-body">
+                    <h5 class="card-title">Monday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-2">
+                <div class="card-body">
+                    <h5 class="card-title">Tuesday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-3">
+                <div class="card-body">
+                    <h5 class="card-title">Wednesday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-4">
+                <div class="card-body">
+                    <h5 class="card-title">Thursday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-5">
+                <div class="card-body">
+                    <h5 class="card-title">Friday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+            <div class="card m-3" id="weekday-card-6">
+                <div class="card-body">
+                    <h5 class="card-title">Saturday</h5>
+                    <div class="row anime-grid"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.min.js" integrity="sha512-a6ctI6w1kg3J4dSjknHj3aWLEbjitAXAjLDRUxo2wyYmDFRcz2RJuQr5M3Kt8O/TtUSp8n2rAyaXYy1sjoKmrQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone.min.js" integrity="sha512-jkvef+BAlqJubZdUhcyvaE84uD9XOoLR3e5GGX7YW7y8ywt0rwcGmTQHoxSMRzrJA3+Jh2T8Uy6f8TLU3WQhpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.js" integrity="sha512-nwFvp27oDSOkJAXZdkqJDB2FkkI3dXJKSapfBmm+R9YW/4KvT8SAGhyTxmt6Uxfa49rTYODHdjjVjOLSJELfJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
