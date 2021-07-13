@@ -82,12 +82,19 @@
     }
 
     function insertAnime(anime, type) {
-        let time = getDay(anime.broadcast.day_of_the_week);
-        let broadcastTimeSplit = anime.broadcast.start_time.split(":");
-        time.set("hour", broadcastTimeSplit[0]);
-        time.set("minute", broadcastTimeSplit[1]);
-        let local = time.local();
-        let weekday = local.isoWeekday();
+        let time = null;
+        let local = null;
+        let weekday = 0;
+        if (anime.broadcast) {
+            time = getDay(anime.broadcast.day_of_the_week)
+        }
+        if (time !== null) {
+            let broadcastTimeSplit = anime.broadcast.start_time.split(":");
+            time.set("hour", broadcastTimeSplit[0]);
+            time.set("minute", broadcastTimeSplit[1]);
+            local = time.local();
+            weekday = local.isoWeekday();
+        }
 
         let card = gen("div");
         card.classList.add("card", "col-xs-12", "col-sm-6", "col-md-3", "col-lg-2");
@@ -111,7 +118,9 @@
 
         let cardText = gen("p");
         cardBody.appendChild(cardText);
-        cardText.textContent = local.format("hh:mm A ");
+        if (local !== null) {
+            cardText.textContent = local.format("hh:mm A ");
+        }
 
         let edit = gen("a");
         edit.href = "https://myanimelist.net/ownlist/anime/" + anime.id + "/edit"
@@ -131,6 +140,9 @@
         cardText.appendChild(badge);
 
         id("weekday-card-" + weekday).querySelector(".anime-grid").appendChild(card);
+        if (weekday == 0) {
+            id("weekday-card-0").classList.remove("d-none");
+        }
     }
 
     function checkStatus(response) {
