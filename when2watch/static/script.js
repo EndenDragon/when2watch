@@ -4,7 +4,7 @@
     function init() {
         fetchAPI();
 
-        let day = moment().local().day();
+        let day = moment().local().isoWeekday();
         id("weekday-card-" + day).classList.add("border-primary");
         id("weekday-card-" + day).querySelector(".card-title").id = "today";
 
