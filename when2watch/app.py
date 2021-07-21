@@ -1,4 +1,4 @@
-from flask import Flask, url_for, session, redirect, jsonify, abort, render_template
+from flask import Flask, url_for, session, redirect, jsonify, abort, render_template, request
 from config import config
 import time
 
@@ -36,8 +36,10 @@ def login():
 
 @app.route("/authorize")
 def authorize():
-    token = mal.authorize_access_token(code_verifier=session["code_challenge"])
-    session["token"] = token
+    error = request.args.get("error", None)
+    if not error:
+        token = mal.authorize_access_token(code_verifier=session["code_challenge"])
+        session["token"] = token
     return redirect(url_for("index"))
 
 @app.route("/logout")
