@@ -63,7 +63,6 @@ def perform_filter(animelist):
     today = datetime.datetime.today()
     result = []
     for anime in animelist:
-        print(anime)
         anime = anime["node"]
         if anime["status"] == "currently_airing" \
                 or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and today + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
