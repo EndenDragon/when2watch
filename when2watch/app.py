@@ -64,9 +64,12 @@ def perform_filter(animelist):
     result = []
     for anime in animelist:
         anime = anime["node"]
+        modifier = 1
+        if anime.get("media_type", None) == "movie":
+            modifier = 6
         if anime["status"] == "currently_airing" \
                 or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and today + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
-                or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and today - datetime.timedelta(days=7) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
+                or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and today - datetime.timedelta(days=7 * modifier) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
             result.append(anime)
     return result
 
@@ -78,7 +81,7 @@ def get_user():
 def get_user_animelist(status=None):
     data = []
     while len(data) % 1000 == 0:
-        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date"}
+        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date,media_type"}
         if status:
             params["status"] = status
         resp = mal.get("users/@me/animelist", params=params, token=session["token"])
