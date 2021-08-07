@@ -139,6 +139,19 @@
         }
         cardText.appendChild(badge);
 
+        if (anime.status == "not_yet_aired" || anime.status == "finished_airing") {
+            let airbadge = gen("span");
+            if (anime.status == "not_yet_aired") {
+                airbadge.classList.add("badge", "bg-danger");
+                airbadge.textContent = "Not Yet Aired";
+            } else if (anime.status == "finished_airing") {
+                airbadge.classList.add("badge", "bg-primary");
+                airbadge.textContent = "Finished Airing";
+            }
+            cardText.appendChild(document.createTextNode(" "));
+            cardText.appendChild(airbadge);
+        }
+
         id("weekday-card-" + weekday).querySelector(".anime-grid").appendChild(card);
         if (weekday == 0) {
             id("weekday-card-0").classList.remove("d-none");
