@@ -111,7 +111,7 @@
         cardBody.appendChild(cardTitle);
 
         let cardTitleLink = gen("a");
-        cardTitleLink.href = "https://myanimelist.net/anime/" + anime.id;
+        cardTitleLink.href = "https://myanimelist.net/anime/" + anime.id + "/" + anime.title.replace(/[\!\"\#\%\'\(\)\*\,\.\@\[\]\~\;]/g, "").replace(/[^a-zA-Z0-9\-]/g, "_");
         cardTitleLink.target = "_blank";
         cardTitleLink.textContent = anime.title;
         cardTitle.appendChild(cardTitleLink);
