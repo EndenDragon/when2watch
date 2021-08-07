@@ -5,7 +5,6 @@ import time
 from authlib.integrations.flask_client import OAuth
 from authlib.oauth2.rfc7636 import create_s256_code_challenge
 from authlib.common.security import generate_token
-from expiringdict import ExpiringDict
 import datetime
 
 app = Flask(__name__)
@@ -18,15 +17,13 @@ oauth.init_app(app)
 code_verifier = generate_token(48)
 app_start_stamp = time.time()
 
-mal = oauth.register("mal", 
+mal = oauth.register("mal",
     client_id = config["client-id"],
     client_secret = config["client-secret"],
     access_token_url = "https://myanimelist.net/v1/oauth2/token",
     authorize_url = "https://myanimelist.net/v1/oauth2/authorize",
     api_base_url = "https://api.myanimelist.net/v2/"
 )
-
-cache = ExpiringDict(max_len=2000, max_age_seconds=43200)
 
 @app.route("/login")
 def login():
@@ -72,15 +69,6 @@ def perform_filter(animelist):
                 or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and today + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
                 or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and today - datetime.timedelta(days=7) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
             result.append(anime)
-    return result
-
-def get_anime_details(anime_id):
-    if anime_id in cache:
-        return cache[anime_id]
-    resp = mal.get("anime/{}?fields=id,title,status,broadcast".format(anime_id), token=session["token"])
-    resp.raise_for_status()
-    result = resp.json()
-    cache[anime_id] = result
     return result
 
 def get_user():
