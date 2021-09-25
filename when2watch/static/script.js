@@ -25,8 +25,11 @@
             let searchParams = new URLSearchParams(window.location.search);
             let date = moment(searchParams.get("date"), "MM-DD-YYYY");
             if (date.isValid()) {
-                $(dateDiv).datepicker("setDate", date.toDate());
+                date = date.toDate();
+            } else {
+                date = Date();
             }
+            $(dateDiv).datepicker("setDate", date);
             $(dateDiv).on("changeDate", updateDate);
         }
     }
