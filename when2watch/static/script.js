@@ -125,9 +125,14 @@
             time = getDay(anime.broadcast.day_of_the_week)
         }
         if (time !== null) {
-            let broadcastTimeSplit = anime.broadcast.start_time.split(":");
-            time.set("hour", broadcastTimeSplit[0]);
-            time.set("minute", broadcastTimeSplit[1]);
+            if (anime.broadcast.start_time) {
+                let broadcastTimeSplit = anime.broadcast.start_time.split(":");
+                time.set("hour", broadcastTimeSplit[0]);
+                time.set("minute", broadcastTimeSplit[1]);
+            } else {
+                time.set("hour", 12); // middle of the day to be correct within 50/50
+                time.set("minute", 0);
+            }
             local = time.local();
             weekday = local.isoWeekday();
         }
