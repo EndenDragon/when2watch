@@ -9,6 +9,33 @@
         id("weekday-card-" + day).querySelector(".card-title").id = "today";
 
         id("profile-picture").addEventListener("click", openMAL);
+
+        $("[data-toggle=popover]").popover();
+        id("date-btn").addEventListener("inserted.bs.popover", initDatePicker);
+    }
+
+    function initDatePicker() {
+        let popoverEl = bootstrap.Popover.getInstance(id("date-btn")).tip;
+        if (popoverEl.querySelector(".calendar") == null) {
+            let dateDiv = gen("div");
+            dateDiv.classList.add("calendar");
+            popoverEl.appendChild(dateDiv);
+            $(dateDiv).datepicker();
+
+            let searchParams = new URLSearchParams(window.location.search);
+            let date = moment(searchParams.get("date"), "MM-DD-YYYY");
+            if (date.isValid()) {
+                $(dateDiv).datepicker("setDate", date.toDate());
+            }
+            $(dateDiv).on("changeDate", updateDate);
+        }
+    }
+
+    function updateDate(event) {
+        let date = moment(event.date);
+        let searchParams = new URLSearchParams(window.location.search);
+        searchParams.set("date", date.format("MM-DD-YYYY"));
+        window.location.search = searchParams.toString();
     }
 
     function openMAL() {
@@ -16,7 +43,12 @@
     }
 
     function fetchAPI() {
-        fetch("api")
+        let url = "api";
+        let date = new URLSearchParams(window.location.search).get('date');
+        if (date) {
+            url = "api?date=" + date;
+        }
+        fetch(url)
             .then(checkStatus)
             .then(JSON.parse)
             .then(handleResponse)
@@ -79,6 +111,7 @@
         id("user-corner").classList.remove("invisible");
         id("weekdays").classList.remove("d-none");
         id("today-btn").classList.remove("invisible");
+        id("date-btn").classList.remove("invisible");
     }
 
     function insertAnime(anime, type) {

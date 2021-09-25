@@ -53,14 +53,21 @@ def index():
 def api():
     if "token" not in session:
         abort(401)
+    date = request.args.get("date", None)
+    if date:
+        try:
+            date = datetime.datetime.strptime(date, "%m-%d-%Y")
+        except:
+            date = datetime.datetime.today()
+    else:
+        date = datetime.datetime.today()
     user = get_user()
     animelist = {}
-    animelist["watching"] = perform_filter(get_user_animelist("watching"))
-    animelist["plan_to_watch"] = perform_filter(get_user_animelist("plan_to_watch"))
+    animelist["watching"] = perform_filter(get_user_animelist("watching"), date)
+    animelist["plan_to_watch"] = perform_filter(get_user_animelist("plan_to_watch"), date)
     return jsonify(user=user, animelist=animelist)
 
-def perform_filter(animelist):
-    today = datetime.datetime.today()
+def perform_filter(animelist, date):
     result = []
     for anime in animelist:
         anime = anime["node"]
@@ -68,8 +75,8 @@ def perform_filter(animelist):
         if anime.get("media_type", None) == "movie":
             modifier = 6
         if anime["status"] == "currently_airing" \
-                or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and today + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
-                or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and today - datetime.timedelta(days=7 * modifier) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
+                or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and date + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
+                or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and date - datetime.timedelta(days=7 * modifier) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
             result.append(anime)
     return result
 
