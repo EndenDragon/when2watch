@@ -74,7 +74,7 @@ def perform_filter(animelist, date):
         modifier = 1
         if anime.get("media_type", None) == "movie":
             modifier = 6
-        if anime["status"] == "currently_airing" and date.date() == datetime.datetime.today().date() \
+        if anime["status"] == "currently_airing" and (date.date() == datetime.datetime.today().date() or anime.get("end_date", None) is None) \
                 or (anime["status"] == "not_yet_aired" and anime.get("start_date", None) and len(anime["start_date"]) == 10 and date + datetime.timedelta(days=5) >= datetime.datetime.strptime(anime["start_date"], "%Y-%m-%d")) \
                 or (anime["status"] == "finished_airing" and anime.get("end_date", None) and len(anime["end_date"]) == 10 and date - datetime.timedelta(days=7 * modifier) <= datetime.datetime.strptime(anime["end_date"], "%Y-%m-%d")):
             result.append(anime)
