@@ -10,6 +10,8 @@ import datetime
 app = Flask(__name__)
 
 app.secret_key = config["app-secret"]
+app.config["PERMANENT_SESSION_LIFETIME"] = datetime.timedelta(days=7)
+app.config["SESSION_REFRESH_EACH_REQUEST"] = False
 
 oauth = OAuth()
 oauth.init_app(app)
@@ -38,6 +40,7 @@ def authorize():
     if not error:
         token = mal.authorize_access_token(code_verifier=session["code_challenge"])
         session["token"] = token
+        session.permanent = True
     return redirect(url_for("index"))
 
 @app.route("/logout")
