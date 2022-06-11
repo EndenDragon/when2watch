@@ -91,7 +91,7 @@ def get_user():
 def get_user_animelist(status=None):
     data = []
     while len(data) % 1000 == 0:
-        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date,media_type", "nsfw": "true"}
+        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date,media_type,average_episode_duration", "nsfw": "true"}
         if status:
             params["status"] = status
         resp = mal.get("users/@me/animelist", params=params, token=session["token"])
@@ -101,3 +101,12 @@ def get_user_animelist(status=None):
         if not resp_json.get("paging", None) or not resp_json["paging"].get("next", None):
             break
     return data
+
+@app.route("/raw")
+def raw():
+    if "token" not in session:
+        abort(401)
+    status = request.args.get("status", None)
+    animelist = {}
+    animelist = get_user_animelist(status)
+    return jsonify(animelist=animelist)
