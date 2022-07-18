@@ -64,7 +64,7 @@
         console.error(error);
     }
 
-    function getDay(day) {
+    function getRawDay(day) {
         let dayINeed = -1;
         if (day == "sunday") {
             dayINeed = 7;
@@ -83,6 +83,15 @@
         }
 
         if (dayINeed < 0) {
+            return null;
+        }
+        return dayINeed;
+    }
+
+    function getDay(day) {
+        let dayINeed = getRawDay(day);
+
+        if (dayINeed === null) {
             return null;
         }
 
@@ -117,6 +126,38 @@
         id("date-btn").classList.remove("invisible");
     }
 
+    function extractCommentOverrides(comments) {
+        let overrides = {
+            "weekday": null
+        }
+        let overrideHandlers = {
+            "weekday": handleOverrideWeekday
+        }
+        comments = comments.split(/\r?\n/);
+        for (let i = 0; i < comments.length; i++) {
+            let line = comments[i].trim();
+            if (line.indexOf(": ") === -1) {
+                continue;
+            }
+            line = line.split(/\: /);
+            let key = line[0].trim().toLowerCase();
+            let value = line[1].trim();
+
+            if (key in overrides) {
+                overrides[key] = overrideHandlers[key](value);
+            }
+        }
+        return overrides;
+    }
+
+    function handleOverrideWeekday(value) {
+        value = getRawDay(value.toLowerCase());
+        if (value === null) {
+            return null;
+        }
+        return value;
+    }
+
     function insertAnime(anime, type) {
         let time = null;
         let local = null;
@@ -135,6 +176,11 @@
             }
             local = time.local();
             weekday = local.isoWeekday();
+        }
+
+        let overrides = extractCommentOverrides(anime.my_list_status.comments);
+        if (overrides.weekday !== null) {
+            weekday = overrides.weekday;
         }
 
         let card = gen("div");

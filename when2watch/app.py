@@ -91,7 +91,7 @@ def get_user():
 def get_user_animelist(status=None):
     data = []
     while len(data) % 1000 == 0:
-        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date,media_type,average_episode_duration", "nsfw": "true"}
+        params = {"limit": 1000, "offset": len(data), "fields": "list_status,broadcast,node.status,start_date,end_date,media_type,average_episode_duration,my_list_status,my_list_status{{comments}}", "nsfw": "true"}
         if status:
             params["status"] = status
         resp = mal.get("users/@me/animelist", params=params, token=session["token"])
